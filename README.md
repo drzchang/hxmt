@@ -1,5 +1,5 @@
-# hxmt
-## introduction
+# Insight-HXMT
+## Introduction
 The Hard X-ray Modulation Telescope (HXMT) , named "Insight",
 is China’s first X-ray astronomy satellite.
 <http://www.hxmt.org/index.php/enhome>
