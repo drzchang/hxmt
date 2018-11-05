@@ -15,7 +15,7 @@ Note:
 from __future__ import division, print_function
 
 __author__ = 'Zhi Chang <changzhi@ihep.ac.cn>'
-__version__ = 'v1r0p0'
+__version__ = 'v1r1p0'
 __date__ = '2018-xx-xx'
 
 import urllib
@@ -27,6 +27,9 @@ import numpy as np
 
 
 class Source(object):
+    '''
+    class to handle the source information of one observation
+    '''
     def __init__(self, obsid, name, time1, mode, ra, dec, exp, r, v, step):
         self.obsid = ''.join(obsid.split()).replace(',', '_')
         name = ''.join(name.split())
@@ -51,6 +54,10 @@ class Source(object):
 
 
 class UrlManager(object):
+    '''
+    class to hanlde urls during the process, excluding the urls which
+    have been crawed.
+    '''
     def __init__(self):
         self.new_urls = set()
         self.old_urls = set()
@@ -77,7 +84,9 @@ class UrlManager(object):
 
 
 class HtmlDownloader(object):
-
+    '''
+    download the html page for analysis.
+    '''
     def download(self, url):
         if url is None:
             return None
@@ -88,7 +97,9 @@ class HtmlDownloader(object):
 
 
 class HtmlParser(object):
-
+    '''
+    analysis the downloaded pages, retrive the information we need.
+    '''
     def parser(self, page_url, html_cont):
         if page_url is None or html_cont is None:
             return
@@ -129,7 +140,10 @@ class HtmlParser(object):
         return res_data
 
 
-class TxtOutputer(object):
+class Outputer(object):
+    '''
+    output file handler
+    '''
     def __init__(self):
         self.datas = []
 
@@ -139,6 +153,8 @@ class TxtOutputer(object):
         self.datas += data
 
     def output_txt(self):
+        '''txt file handler
+        '''
         timeStruct = time.localtime(time.time())
         strTime = time.strftime("%Y-%m-%d", timeStruct)
         fout = open('hxmt-schedule-%s.txt' % strTime, 'w', encoding='utf8')
@@ -164,6 +180,8 @@ class TxtOutputer(object):
         fout.close()
 
     def output_csv(self):
+        ''' csv file handler
+        '''
         timeStruct = time.localtime(time.time())
         strTime = time.strftime("%Y-%m-%d", timeStruct)
         fout = open('hxmt-schedule-%s.csv' % strTime, 'w', encoding='utf8')
@@ -190,7 +208,7 @@ class SpiderMain(object):
         self.urls = UrlManager()
         self.downloader = HtmlDownloader()
         self.parser = HtmlParser()
-        self.outputer = TxtOutputer()
+        self.outputer = Outputer()
 
     def craw(self, root_url):
         count = 1
@@ -218,6 +236,8 @@ class SpiderMain(object):
 
 
 if __name__ == '__main__':
+    # the start page url
     root_url = 'http://www.hxmt.org/index.php/plan/splan/256-hxmt-short-term-schedule-2017-6-25-30'
+    # starting the spider
     obj_spider = SpiderMain()
     obj_spider.craw(root_url)
