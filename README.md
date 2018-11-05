@@ -10,3 +10,9 @@ which published in its offical website
 
 It will create a txt file and a csv file of the schedule,
 and the scan model will be excluded.
+
+## use
+Anaconda3 is recommended.
+```
+python craw_hxmt_sort_schedule.py
+```
