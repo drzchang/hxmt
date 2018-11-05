@@ -224,9 +224,13 @@ class SpiderMain(object):
 #                 if count == 100:
 #                     break
                 count += 1
-                sleep_t = np.random.randint(5)
-                print('sleep %d seconds ...' % sleep_t)
-                time.sleep(sleep_t)
+
+                # random sleep time after craw each page.
+                # user can comment or uncomment the following three lines
+                # sleep_t = np.random.randint(5)
+                # print('sleep %d seconds ...' % sleep_t)
+                # time.sleep(sleep_t)
+            
             except Exception as e:
                 print(e)
                 print('craw failed .')
