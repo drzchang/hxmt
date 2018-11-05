@@ -9,7 +9,7 @@ which published in its offical website
 <http://www.hxmt.org/index.php/enhome/schedule/75-short-term-schedule>
 
 It will create a txt file and a csv file of the schedule,
-and the scan model will be excluded.
+and only the point model will be saved to the results files.
 
 ## use
 Anaconda3 is recommended.
