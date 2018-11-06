@@ -35,9 +35,9 @@ class Source(object):
         self.name = name.lower().replace('_', '')
         tt = time1.split()
         isot = 'T'.join(['-'.join(tt[0].split('/')), tt[-1]])
-        isot1 = time.strptime(isot, '%Y-%m-%dT%H:%M:%S')
-        self.isot = time.strftime("%Y-%m-%dT%H:%M:%S", isot1)
         self.time = Time(isot, format='isot').mjd
+        isot = time.strptime(isot, '%Y-%m-%dT%H:%M:%S')
+        self.isot = time.strftime("%Y-%m-%dT%H:%M:%S", isot)
         self.mode = mode.split()[0]
         self.ra = ra.split()[0]
         self.dec = dec.split()[0]
