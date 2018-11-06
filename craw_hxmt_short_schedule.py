@@ -23,13 +23,12 @@ from bs4 import BeautifulSoup
 from astropy.time import Time
 import time
 import re
-import numpy as np
 
 
 class Source(object):
-    '''
+    """
     class to handle the source information of one observation
-    '''
+    """
     def __init__(self, obsid, name, time1, mode, ra, dec, exp, r, v, step):
         self.obsid = ''.join(obsid.split()).replace(',', '_')
         name = ''.join(name.split())
@@ -54,10 +53,10 @@ class Source(object):
 
 
 class UrlManager(object):
-    '''
+    """
     class to hanlde urls during the process, excluding the urls which
     have been crawed.
-    '''
+    """
     def __init__(self):
         self.new_urls = set()
         self.old_urls = set()
@@ -84,9 +83,9 @@ class UrlManager(object):
 
 
 class HtmlDownloader(object):
-    '''
+    """
     download the html page for analysis.
-    '''
+    """
     def download(self, url):
         if url is None:
             return None
@@ -97,15 +96,15 @@ class HtmlDownloader(object):
 
 
 class HtmlParser(object):
-    '''
+    """
     analysis the downloaded pages, retrive the information we need.
-    '''
+    """
     def parser(self, page_url, html_cont):
         if page_url is None or html_cont is None:
             return
         soup = BeautifulSoup(html_cont, 'html.parser', from_encoding='utf-8')
         new_urls = self._get_new_urls(page_url, soup)
-        new_data = self._get_new_data(page_url, soup)
+        new_data = self._get_new_data(soup)
         return new_urls, new_data
 
     def _get_new_urls(self, page_url, soup):
@@ -117,7 +116,7 @@ class HtmlParser(object):
             new_urls.add(new_full_url)
         return new_urls
 
-    def _get_new_data(self, page_url, soup):
+    def _get_new_data(self, soup):
         res_data = set()
         obs_node = soup.findAll('td')
         obs = []
@@ -141,9 +140,9 @@ class HtmlParser(object):
 
 
 class Outputer(object):
-    '''
+    """
     output file handler
-    '''
+    """
     def __init__(self):
         self.datas = []
 
@@ -153,11 +152,11 @@ class Outputer(object):
         self.datas += data
 
     def output_txt(self):
-        '''txt file handler
-        '''
-        timeStruct = time.localtime(time.time())
-        strTime = time.strftime("%Y-%m-%d", timeStruct)
-        fout = open('hxmt-schedule-%s.txt' % strTime, 'w', encoding='utf8')
+        """txt file handler
+        """
+        time_struct = time.localtime(time.time())
+        str_time = time.strftime('%Y-%m-%d', time_struct)
+        fout = open('hxmt-schedule-%s.txt' % str_time, 'w', encoding='utf8')
         fout.write('#%12s %20s %9s %9s %20s %20s %7s\n' % ('obsid',
                                                            'name',
                                                            'ra',
@@ -180,11 +179,11 @@ class Outputer(object):
         fout.close()
 
     def output_csv(self):
-        ''' csv file handler
-        '''
-        timeStruct = time.localtime(time.time())
-        strTime = time.strftime("%Y-%m-%d", timeStruct)
-        fout = open('hxmt-schedule-%s.csv' % strTime, 'w', encoding='utf8')
+        """ csv file handler
+        """
+        time_struct = time.localtime(time.time())
+        str_time = time.strftime('%Y-%m-%d', time_struct)
+        fout = open('hxmt-schedule-%s.csv' % str_time, 'w', encoding='utf8')
         fout.write('#%s,%s,%s,%s,%s,%s,%s\n' % (
                     'obsid', 'name', 'ra', 'dec',
                     'time(isot)', 'time(mjd)', 'exp(ks)'))
