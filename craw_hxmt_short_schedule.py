@@ -18,7 +18,7 @@ __author__ = 'Zhi Chang <changzhi@ihep.ac.cn>'
 __version__ = 'v1r1p0'
 __date__ = '2018-xx-xx'
 
-import urllib
+import urllib.request
 from bs4 import BeautifulSoup
 from astropy.time import Time
 import time
