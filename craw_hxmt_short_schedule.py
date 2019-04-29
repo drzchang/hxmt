@@ -215,7 +215,7 @@ class SpiderMain(object):
         while self.urls.has_new_url():
             try:
                 new_url = self.urls.get_new_url()
-                print('craw %2d : %s' % (count, new_url))
+                print('crawl %2d : %s' % (count, new_url))
                 html_cont = self.downloader.download(new_url)
                 new_urls, new_data = self.parser.parser(new_url, html_cont)
                 self.urls.add_new_urls(new_urls)
