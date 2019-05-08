@@ -17,9 +17,11 @@ __version__ = 'v1r0p0'
 __date__ = '2019-xx-xx'
 
 import urllib.request
+import urllib.parse
 from bs4 import BeautifulSoup
 from astropy.time import Time
 import re
+import os
 
 
 class Source(object):
@@ -103,11 +105,11 @@ class HtmlParser(object):
         for tr in trs[2:]:
             tds = tr.find_all('td')
             if tds[3].get_text().strip() == 'Point':  # only point mode
-                obsid = tds[0].get_text().strip()
                 name = tds[1].get_text().strip()
                 name = name.replace(' ', '').lower()
                 if 'blank' in name:  # skip blank sky observation
                     continue
+                obsid = tds[0].get_text().strip()
                 t = tds[2].get_text().strip()
                 isot = t.replace('/', '-').replace(' ', 'T')
                 ra = tds[4].get_text().strip()
@@ -133,11 +135,13 @@ class Outputer(object):
             return
         self.srcs += data
 
-    def output_txt(self):
+    def output_txt(self, pathout):
         """txt file handler
         """
         _s = '{:12s} {:20s} {:9s} {:9s} {:>24s} {:20s} {:7s}\n'
-        fout = open('hxmt-schedule.txt', 'w', encoding='utf8')
+
+        _txt = os.path.join(pathout, 'schedule.txt')
+        fout = open(_txt, 'w', encoding='utf8')
         fout.write('#' + _s.format('obsid',
                                    'name',
                                    'ra',
@@ -158,11 +162,13 @@ class Outputer(object):
 
         fout.close()
 
-    def output_csv(self):
+    def output_csv(self, pathout):
         """ csv file handler
         """
         _s = '{},{},{},{},{},{},{}\n'
-        fout = open('hxmt-schedule.csv', 'w', encoding='utf8')
+
+        _csv = os.path.join(pathout, 'schedule.csv')
+        fout = open(_csv, 'w', encoding='utf8')
         fout.write('#' + _s.format('obsid',
                                    'name',
                                    'ra',
@@ -190,7 +196,7 @@ class SpiderMain(object):
         self.parser = HtmlParser()
         self.outputer = Outputer()
 
-    def craw(self, root_url):
+    def craw(self, root_url, pathout='./'):
         count = 1
         self.urls.add_new_url(root_url)
         while self.urls.has_new_url():
@@ -207,11 +213,15 @@ class SpiderMain(object):
                 print(e)
                 print('craw failed .')
 
-        self.outputer.output_txt()
-        self.outputer.output_csv()
+        self.outputer.output_txt(pathout)
+        self.outputer.output_csv(pathout)
 
 
-if __name__ == '__main__':
+def craw_hxmt():
     root_url = 'http://www.hxmt.org/index.php/plan/splan/256-hxmt-short-term-schedule-2017-6-25-30'
     obj_spider = SpiderMain()
     obj_spider.craw(root_url)
+
+
+if __name__ == '__main__':
+    craw_hxmt()
