@@ -14,5 +14,5 @@ and only the point model will be saved to the results files.
 ## use
 Anaconda3 is recommended.
 ```
-python craw_hxmt_sort_schedule.py
+python hxmt_schedule_spider.py
 ```
