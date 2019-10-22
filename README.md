@@ -11,7 +11,7 @@ which published in its offical website
 It will create a txt file and a csv file of the schedule,
 and only the point model will be saved to the results files.
 
-## use
+## Usage
 Anaconda3 is recommended.
 ```
 python hxmt_schedule_spider.py
