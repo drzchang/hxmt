@@ -80,6 +80,11 @@ class HtmlDownloader(object):
         return response.read()
 
 
+exclude_source_list = ['0817_c', 'craboffset', 'crab_offset', 'cosmosfield',
+                       '8hr', 'antlia', 'tycho', '9hr', 'decam', 'cdfs',
+                       'burst']
+
+
 class HtmlParser(object):
 
     def parser(self, page_url, html_cont):
@@ -107,8 +112,14 @@ class HtmlParser(object):
             if tds[3].get_text().strip() == 'Point':  # only point mode
                 name = tds[1].get_text().strip()
                 name = name.replace(' ', '').lower()
-                if 'blank' in name:  # skip blank sky observation
+
+                if name.startswith('blank') or \
+                        name.startswith('dusty') or \
+                        name.startswith('field'):
                     continue
+                if name in exclude_source_list:
+                    continue
+
                 obsid = tds[0].get_text().strip()
                 t = tds[2].get_text().strip()
                 isot = t.replace('/', '-').replace(' ', 'T')
