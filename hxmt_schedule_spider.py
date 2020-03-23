@@ -22,6 +22,8 @@ from bs4 import BeautifulSoup
 from astropy.time import Time
 import re
 import os
+import sys
+import numpy as np
 
 
 class Source(object):
@@ -97,16 +99,19 @@ class HtmlParser(object):
 
     def _get_new_urls(self, page_url, soup):
         new_urls = set()
-        links = soup.findAll('li', class_=re.compile(r'pagenav'))
+        links = soup.findAll('a', class_=re.compile(r'hy_doc_more'))
         for link in links:
-            new_url = link.find('a')['href']
+            new_url = link['href']
             new_full_url = urllib.parse.urljoin(page_url, new_url)
             new_urls.add(new_full_url)
         return new_urls
 
     def _get_new_data(self, soup):
         sources = set()
-        trs = soup.find('tbody').find_all('tr')
+        try:
+            trs = soup.find('tbody').find_all('tr')
+        except:
+            return
         for tr in trs[2:]:
             tds = tr.find_all('td')
             if tds[3].get_text().strip() == 'Point':  # only point mode
@@ -122,7 +127,8 @@ class HtmlParser(object):
 
                 obsid = tds[0].get_text().strip()
                 t = tds[2].get_text().strip()
-                isot = t.replace('/', '-').replace(' ', 'T')
+                isot = t.replace('/', '-')
+                isot = 'T'.join(isot.split())
                 ra = tds[4].get_text().strip()
                 dec = tds[5].get_text().strip()
                 exp = tds[6].get_text().strip()
@@ -211,27 +217,27 @@ class SpiderMain(object):
         count = 1
         self.urls.add_new_url(root_url)
         while self.urls.has_new_url():
-            try:
-                new_url = self.urls.get_new_url()
-                print('craw %2d : %s' % (count, new_url))
-                html_cont = self.downloader.download(new_url)
-                new_urls, new_data = self.parser.parser(new_url, html_cont)
-                self.urls.add_new_urls(new_urls)
-                self.outputer.collect_data(new_data)
-                count += 1
-
-            except Exception as e:
-                print(e)
-                print('craw failed .')
+            new_url = self.urls.get_new_url()
+            print('craw %2d : %s' % (count, new_url))
+            html_cont = self.downloader.download(new_url)
+            new_urls, new_data = self.parser.parser(new_url, html_cont)
+            self.urls.add_new_urls(new_urls)
+            self.outputer.collect_data(new_data)
+            count += 1
 
         self.outputer.output_txt(pathout)
         self.outputer.output_csv(pathout)
 
 
 def craw_hxmt():
-    root_url = 'http://www.hxmt.org/index.php/plan/splan/256-hxmt-short-term-schedule-2017-6-25-30'
     obj_spider = SpiderMain()
-    obj_spider.craw(root_url)
+    root_url = 'http://www.hxmt.org/dqjh_{}.jhtml'
+    for i in np.arange(1, 3):
+        try:
+            obj_spider.craw(root_url.format(i))
+        except Exception as e:
+            print(e)
+            print('craw failed')
 
 
 if __name__ == '__main__':
