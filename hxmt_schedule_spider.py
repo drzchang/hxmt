@@ -110,7 +110,7 @@ class HtmlParser(object):
         sources = set()
         try:
             trs = soup.find('tbody').find_all('tr')
-        except:
+        except AttributeError:
             return
         for tr in trs[2:]:
             tds = tr.find_all('td')
