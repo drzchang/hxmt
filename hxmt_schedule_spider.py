@@ -116,7 +116,8 @@ class HtmlParser(object):
             tds = tr.find_all('td')
             if tds[3].get_text().strip() == 'Point':  # only point mode
                 name = tds[1].get_text().strip()
-                name = name.replace(' ', '').lower()
+                name = ''.join(list(filter(str.isalnum, name))).lower()
+                #name = name.replace(' ', '').lower()
 
                 if name.startswith('blank') or \
                         name.startswith('dusty') or \
