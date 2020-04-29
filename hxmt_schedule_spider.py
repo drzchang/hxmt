@@ -26,6 +26,10 @@ import sys
 import numpy as np
 
 
+def is_leagal_char(a):
+    return str(a).isalnum() or a == '-' or a == '-' or a == '.'
+
+
 class Source(object):
     def __init__(self, obsid, name, isot, ra, dec, exp):
         self.obsid = obsid
@@ -116,7 +120,7 @@ class HtmlParser(object):
             tds = tr.find_all('td')
             if tds[3].get_text().strip() == 'Point':  # only point mode
                 name = tds[1].get_text().strip()
-                name = ''.join(list(filter(str.isalnum, name))).lower()
+                name = ''.join(list(filter(is_leagal_char, name))).lower()
                 #name = name.replace(' ', '').lower()
 
                 if name.startswith('blank') or \
