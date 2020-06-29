@@ -6,7 +6,7 @@ is China’s first X-ray astronomy satellite.
 ## hxmt_schedule_spider.py
 used to craw the short observation schedule of Insight-HXMT,
 which published in its offical website
-<http://www.hxmt.org/index.php/enhome/schedule/75-short-term-schedule>
+<http://www.hxmt.org/ShortPlan.jhtml>
 
 It will create a txt file and a csv file of the schedule,
 and only the point model will be saved to the results files.

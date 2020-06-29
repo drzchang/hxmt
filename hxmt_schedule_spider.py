@@ -236,7 +236,7 @@ class SpiderMain(object):
 
 def craw_hxmt():
     obj_spider = SpiderMain()
-    root_url = 'http://www.hxmt.org/dqjh_{}.jhtml'
+    root_url = 'http://www.hxmt.org/ShortPlan_{}.jhtml'
     for i in np.arange(1, 3):
         try:
             obj_spider.craw(root_url.format(i))
